@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->horizontalSlider->setEnabled(false);
     qtimer = new QTimer(this);
 }
 
@@ -31,6 +32,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+double MainWindow::getCurrentFrame()
+{
+    return capWebcam.get(CV_CAP_PROP_POS_FRAMES);
+}
+double MainWindow::getNumberOfFrames()
+{
+    return capWebcam.get(CV_CAP_PROP_FRAME_COUNT);
+}
 
 void MainWindow::processFrameAndUpdateGUI()
 {
@@ -43,7 +53,7 @@ void MainWindow::processFrameAndUpdateGUI()
 
     QImage qimgOriginal((uchar*)matOriginal.data, matOriginal.cols, matOriginal.rows, matOriginal.step, QImage::Format_RGB888);
 
-
+    ui->horizontalSlider->setValue(getCurrentFrame());
     ui->lblPlay->setPixmap(QPixmap::fromImage(qimgOriginal));
 
     ui->lblPlay->setScaledContents( true );
@@ -67,8 +77,13 @@ void MainWindow::on_playButton_clicked()
         cout <<"error: capWebcam not accessed successfully";
         return;
     }
-    connect(qtimer, SIGNAL(timeout()), this, SLOT(processFrameAndUpdateGUI()));
-    qtimer->start();
+    else
+    {
+        ui->horizontalSlider->setEnabled(true);
+        ui->horizontalSlider->setMaximum(getNumberOfFrames());
+        connect(qtimer, SIGNAL(timeout()), this, SLOT(processFrameAndUpdateGUI()));
+        qtimer->start();
+    }
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -83,4 +98,14 @@ void MainWindow::on_pushButton_3_clicked()
         qtimer->start(0);
         ui->pushButton_3->setText("Pause");
     }
+}
+
+void MainWindow::on_horizontalSlider_sliderPressed()
+{
+    qtimer->stop();
+}
+
+void MainWindow::on_horizontalSlider_sliderReleased()
+{
+    qtimer->start(0);
 }

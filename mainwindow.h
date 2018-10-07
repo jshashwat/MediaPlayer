@@ -32,6 +32,8 @@ public slots:
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    double getCurrentFrame();
+    double getNumberOfFrames();
     ~MainWindow();
 
 private slots:
@@ -40,6 +42,10 @@ private slots:
     void on_playButton_clicked();
 
     void on_pushButton_3_clicked();
+
+    void on_horizontalSlider_sliderPressed();
+
+    void on_horizontalSlider_sliderReleased();
 
 private:
     Ui::MainWindow *ui;
