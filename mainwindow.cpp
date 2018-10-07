@@ -41,6 +41,23 @@ double MainWindow::getNumberOfFrames()
 {
     return capWebcam.get(CV_CAP_PROP_FRAME_COUNT);
 }
+double MainWindow::getFrameRate()
+{
+    return capWebcam.get(CV_CAP_PROP_FPS);
+}
+
+QString MainWindow::getFormattedTime(int timeInSeconds)
+{
+    int seconds = (int) (timeInSeconds) % 60 ;
+    int minutes = (int) ((timeInSeconds / 60) % 60);
+    int hours   = (int) ((timeInSeconds / (60*60)) % 24);
+    QTime t(hours, minutes, seconds);
+    if (hours == 0 )
+        return t.toString("mm:ss");
+    else
+        return t.toString("h:mm:ss");
+}
+
 
 void MainWindow::processFrameAndUpdateGUI()
 {
@@ -52,7 +69,7 @@ void MainWindow::processFrameAndUpdateGUI()
     cv::cvtColor(matOriginal, matOriginal, CV_BGR2RGB);
 
     QImage qimgOriginal((uchar*)matOriginal.data, matOriginal.cols, matOriginal.rows, matOriginal.step, QImage::Format_RGB888);
-
+    ui->label_2->setText( getFormattedTime( (int)getCurrentFrame()/(int)getFrameRate()) );
     ui->horizontalSlider->setValue(getCurrentFrame());
     ui->lblPlay->setPixmap(QPixmap::fromImage(qimgOriginal));
 
@@ -81,6 +98,7 @@ void MainWindow::on_playButton_clicked()
     {
         ui->horizontalSlider->setEnabled(true);
         ui->horizontalSlider->setMaximum(getNumberOfFrames());
+        ui->label_2->setText( getFormattedTime( (int)getCurrentFrame()/(int)getFrameRate()) );
         connect(qtimer, SIGNAL(timeout()), this, SLOT(processFrameAndUpdateGUI()));
         qtimer->start();
     }
@@ -108,4 +126,15 @@ void MainWindow::on_horizontalSlider_sliderPressed()
 void MainWindow::on_horizontalSlider_sliderReleased()
 {
     qtimer->start(0);
+}
+
+void MainWindow :: setCurrentFrame(int frameNumber)
+{
+    capWebcam.set(CV_CAP_PROP_POS_FRAMES, frameNumber);
+}
+
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
+{
+    setCurrentFrame(position);
+    ui->label_2->setText( getFormattedTime( position/(int)getFrameRate()) );
 }

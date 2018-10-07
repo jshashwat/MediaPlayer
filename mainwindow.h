@@ -34,6 +34,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     double getCurrentFrame();
     double getNumberOfFrames();
+    double getFrameRate();
+
     ~MainWindow();
 
 private slots:
@@ -43,9 +45,15 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    QString getFormattedTime(int timeInSeconds);
+
     void on_horizontalSlider_sliderPressed();
 
     void on_horizontalSlider_sliderReleased();
+
+    void on_horizontalSlider_sliderMoved(int position);
+    void setCurrentFrame( int frameNumber);
+
 
 private:
     Ui::MainWindow *ui;
