@@ -29,3 +29,23 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+INCLUDEPATH += /usr/local/include/opencv
+LIBS += -L/usr/local/lib \
+    -lopencv_calib3d \
+    -lopencv_contrib \
+    -lopencv_core \
+    -lopencv_features2d \
+    -lopencv_flann \
+    -lopencv_gpu \
+    -lopencv_highgui \
+    -lopencv_imgproc \
+    -lopencv_imgcodecs \
+    -lopencv_legacy \
+    -lopencv_ml \
+    -lopencv_objdetect \
+    -lopencv_ts \
+    -lopencv_videoio \
+    -lboost_system \
+    -lpthread
+
