@@ -32,6 +32,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+int snapCount = 0;
 
 double MainWindow::getCurrentFrame()
 {
@@ -137,4 +138,20 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
     setCurrentFrame(position);
     ui->label_2->setText( getFormattedTime( position/(int)getFrameRate()) );
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    VideoName = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Open Images"),
+                    "/home/",
+                    tr("mp4 File (*.mp4);; avi File (*.avi)"));
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    snapCount++;
+    String s="snap",s1=to_string(snapCount),s2=".jpg";
+    imwrite(s+s1+s2,matOriginal);
 }

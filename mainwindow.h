@@ -55,6 +55,10 @@ private slots:
     void setCurrentFrame( int frameNumber);
 
 
+    void on_actionOpen_triggered();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     cv::Mat matOriginal;
